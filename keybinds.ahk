@@ -8,7 +8,7 @@
     rows:= StrSplit(text, "`r`n")
 
     for , row in rows {
-        if (row = "")
+        if (row = "" || row = "`t")
             continue
 
         A_Clipboard:= row
