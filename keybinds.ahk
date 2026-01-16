@@ -1,11 +1,9 @@
-; v1.2
+; v2.0
 Abort := false
 
 ; Write single column data from clipboard
 ; to application with enter separation
 !f1::{
-	INSERT_COOLDOWN_MILLIS := 350
-	
 	clipBuf := A_Clipboard
 	text := Trim(A_Clipboard, "`r`n")
 	rows := StrSplit(text, "`r`n")
@@ -15,9 +13,8 @@ Abort := false
 			continue
 		}
 		
-		A_Clipboard := row
-		Send "^v{Enter}"
-		Sleep INSERT_COOLDOWN_MILLIS
+		Send row
+		Send "{Enter}"
 	}
 	
 	A_Clipboard := clipBuf
@@ -27,8 +24,6 @@ Abort := false
 ; to application with tab separation
 !f2::{
 	global Abort := false
-	INSERT_COOLDOWN_MILLIS := 660
-	CLIPBOARD_COOLDOWN_MILLIS := 660
 	
 	clipBuf := A_Clipboard
 	text := Trim(A_Clipboard, "`r`n")
@@ -41,6 +36,13 @@ Abort := false
 		row := rows[i + 1] ; 1-indexed
 
 		if (row = "" || row = "`t") {
+			i := i + 1
+			continue
+		}
+		
+		if (StrSplit(row, A_TAB).Length <= 1) {
+			MsgBox "Current row has only one column", "Error"
+			i := i + 1
 			continue
 		}
 		
@@ -51,15 +53,13 @@ Abort := false
 			place := " "
 		}
 		
-		A_Clipboard := sku
-		Sleep CLIPBOARD_COOLDOWN_MILLIS
-		Send "^v{Tab}"
-		Sleep INSERT_COOLDOWN_MILLIS
+		Send sku
+		Send "{Tab}"
+		;Sleep ARRAY_COOLDOWN_MILLIS
+		Send place 
+		Send "{Tab}"
+		;Sleep ARRAY_COOLDOWN_MILLIS
 		
-		A_Clipboard := place
-		Sleep CLIPBOARD_COOLDOWN_MILLIS
-		Send "^v{Tab}"
-		Sleep INSERT_COOLDOWN_MILLIS
 		
 		i := i + 1
 	}
