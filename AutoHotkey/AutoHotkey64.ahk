@@ -3,4 +3,4 @@
 
 SetWorkingDir A_ScriptDir "\..\scripts"
 
-#Include "..\scripts\keybinds.ahk"
+#Include "..\scripts\main.ahk"
