@@ -1,0 +1,13 @@
+AutoHotkey runtime
+
+This directory includes an unmodified AutoHotkey v2 runtime downloaded from
+the official AutoHotkey project.
+
+Official website:
+https://www.autohotkey.com/
+
+Source repository:
+https://github.com/AutoHotkey/AutoHotkey
+
+The only package-specific file in this directory is AutoHotkey64.ahk, which
+loads ../scripts/main.ahk when AutoHotkey64.exe is started directly.
