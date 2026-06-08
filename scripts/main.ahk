@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 global AppName := "Store Utilities"
-global AppVersion := "2.1"
+global AppVersion := "3.0"
 
 TrayTip AppName, "Running version " AppVersion
 
