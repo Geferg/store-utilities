@@ -1,0 +1,80 @@
+javascript:(() => {
+  function showToast(message, duration = 4000) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    Object.assign(toast.style, {
+      position: 'fixed',
+      bottom: '20px',
+      left: '20px',
+      backgroundColor: '#323232',
+      color: '#fff',
+      padding: '10px 20px',
+      borderRadius: '5px',
+      fontSize: '14px',
+      zIndex: 9999,
+      boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+      opacity: '0',
+      transition: 'opacity 0.3s ease-in-out'
+    });
+
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.style.opacity = '1');
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+
+  try {
+    const tokenKey = Object.keys(sessionStorage).find(
+      k => k.includes('-accesstoken-') &&
+           k.includes('user_impersonation')
+    );
+
+    if (!tokenKey) {
+      throw new Error('Fant ikke access token');
+    }
+
+    const token = JSON.parse(
+      sessionStorage.getItem(tokenKey)
+    ).secret;
+
+    fetch(
+      'https://sp.kjell.com/TransferOrder/IncomingTransferOrders',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json',
+          'Accept': '*/*'
+        },
+        body: JSON.stringify({
+          countryCode: 'NO',
+          locationCode: '011',
+          search: ''
+        })
+      }
+    )
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`API-kall feilet: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(async data => {
+        const jsonText = JSON.stringify(data, null, 2);
+        await navigator.clipboard.writeText(jsonText);
+
+        console.log(data);
+        showToast('JSON kopiert til utklippstavlen');
+      })
+      .catch(err => {
+        showToast('Feil: ' + err.message);
+      });
+
+  } catch (err) {
+    showToast('Feil: ' + err.message);
+  }
+})();
