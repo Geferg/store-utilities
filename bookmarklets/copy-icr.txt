@@ -33,7 +33,7 @@ javascript:(() => {
     );
 
     if (!tokenKey) {
-      throw new Error('Fant ikke access token');
+      throw new Error('Could not find access token');
     }
 
     const token = JSON.parse(
@@ -59,7 +59,7 @@ javascript:(() => {
     )
       .then(res => {
         if (!res.ok) {
-          throw new Error(`API-kall feilet: ${res.status}`);
+          throw new Error(`API call failed: ${res.status}`);
         }
         return res.json();
       })
@@ -68,13 +68,13 @@ javascript:(() => {
         await navigator.clipboard.writeText(jsonText);
 
         console.log(data);
-        showToast('JSON kopiert til utklippstavlen');
+        showToast('JSON copied to clipboard');
       })
       .catch(err => {
-        showToast('Feil: ' + err.message);
+        showToast('Error: ' + err.message);
       });
 
   } catch (err) {
-    showToast('Feil: ' + err.message);
+    showToast('Error: ' + err.message);
   }
 })();
